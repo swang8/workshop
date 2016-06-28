@@ -44,8 +44,7 @@ batch_id=1
 cstacks -b $batch_id $samp -o $out_folder -n 3  -p 15 
 echo "cstacks is done!"
 
-## st
-ep 4. sstacks, map tags of each sample to catalog
+## step 4. sstacks, map tags of each sample to catalog
 for name in $names;
 do
   sstacks -b $batch_id -c $out_folder/batch_${batch_id} -s $out_folder/$name -o $out_folder  
@@ -120,8 +119,7 @@ batch_id=1
 cstacks -b $batch_id $samp -o $out_folder -n 3  -p 15 
 echo "cstacks is done!"
 
-## st
-ep 4. sstacks, map tags of each sample to catalog
+## step 4. sstacks, map tags of each sample to catalog
 for name in $names;
 do
   sstacks -b $batch_id -c $out_folder/batch_${batch_id} -s $out_folder/$name -o $out_folder  
