@@ -5,7 +5,7 @@
 module load Stacks
 
 ## create a folder for stacks output
-$out_folder="stacks_out"
+out_folder="stacks_out"
 mkdir $out_folder
 
 ## format the barcode file
