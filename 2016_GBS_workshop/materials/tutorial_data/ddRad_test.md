@@ -1,4 +1,4 @@
-#Running Stacks for pairend ddRAD data:
+#Run Stacks for pairend ddRAD data:
 
 <pre>
 ## load stacks
