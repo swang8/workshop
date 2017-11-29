@@ -28,7 +28,7 @@ do
   ustacks -t gzfastq -f $out_folder/${name}.fq.gz -r -o $out_folder -i $counter -m 5 -M 3 -p 1
   let "counter+=1"
 done
-echo "ustacks is done!"
+echo "ustacks is done"
 
 ## step 3. cstack, build catelog
 samp=""
@@ -39,14 +39,14 @@ done
 
 batch_id=1
 cstacks -b $batch_id $samp -o $out_folder -n 3  -p 15 
-echo "cstacks is done!"
+echo "cstacks is done"
 
 ## step 4. sstacks, map tags of each sample to catalog
 for name in $names;
 do
   sstacks -b $batch_id -c $out_folder/batch_${batch_id} -s $out_folder/$name -o $out_folder  
 done
-echo "sstacks is done!"
+echo "sstacks is done"
 
 ## step 5. population, Calculate population statistics and export several output files
 # generate a population map file
