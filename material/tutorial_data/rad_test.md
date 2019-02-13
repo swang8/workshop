@@ -72,7 +72,7 @@ populations -b $batch_id -P $out_folder -M pop_map.txt -r 2 -m 5 -e pstI -t 15 -
 
 date
 ## load stacks
-module load Stacks
+module load Stacks/1.48-intel-2017A
 
 ## create a folder for stacks output
 $out_folder="stacks_out"
