@@ -217,20 +217,15 @@ date
 ```
 
 ## Step 5 tsvbam and gstacks
-### Run tsv2bam to transpose the data so it is stored by locus, instead of by sample. We will include
-### paired-end reads using tsv2bam. tsv2bam expects the paired read files to be in the samples
-### directory and they should be named consistently with the single-end reads,
-### e.g. sample_01.1.fq.gz and sample_01.2.fq.gz, which is how process_radtags will output them.
-### Run gstacks: build a paired-end contig from the metapopulation data (if paired-reads provided),
-### align reads per sample, call variant sites in the population, genotypes in each individual.
+### Run tsv2bam to transpose the data so it is stored by locus, instead of by sample. We will include paired-end reads using tsv2bam. tsv2bam expects the paired read files to be in the samples directory and they should be named consistently with the single-end reads,e.g. sample_01.1.fq.gz and sample_01.2.fq.gz, which is how process_radtags will output them.
+### Run gstacks: build a paired-end contig from the metapopulation data (if paired-reads provided), align reads per sample, call variant sites in the population, genotypes in each individual.
 ```shell
 tsv2bam -P $OUTPUT_DIR -M popmap --pe-reads-dir $SAMPLE_DIR -t 20
 gstacks -P $OUTPUT_DIR  -M popmap -t 20
 ```
 
 ## Step 6, population: Calculate population statistics and export several output files
-### Run populations. Calculate Hardy-Weinberg deviation, population statistics, f-statistics
-### export several output files.
+### Run populations. Calculate Hardy-Weinberg deviation, population statistics, f-statistics, export several output files.
 
 ```shell
 populations -P $OUTPUT_DIR -M popmap -r 0.80 --vcf --genepop --structure --fstats --hwe --phylip --fasta --write_single_snp  -t 20
