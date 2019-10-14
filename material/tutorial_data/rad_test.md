@@ -153,7 +153,7 @@ names=`cat accession_names.txt`
 process_radtags -p fastq -i gzfastq -b barcodes_for-stacks.txt -o $out_folder -e pstI -E phred33 -r -c -q
 
 ### If demultiplexing was already done
-<pre>
+
   cmds=""
   for name in $names;
   do
@@ -162,7 +162,7 @@ process_radtags -p fastq -i gzfastq -b barcodes_for-stacks.txt -o $out_folder -e
   done
 
   echo $cmds |tr ";" "\n" |parallel -j 20
-</pre>
+
 ## step 2, ustacks, generate unique stcks
 cmd_file="ustacks.cmds"
 if [ ! -s $cmd_file ]; then
