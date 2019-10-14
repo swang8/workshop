@@ -149,10 +149,10 @@ cut -f 2 barcodes_for-stacks.txt >accession_names.txt
 names=`cat accession_names.txt`
 
 ## step 1.  process_radtags, remove low quality and adapter-containning reads
-### If demuxing not done yet
+### If demuxing has not been done yet
 process_radtags -p fastq -i gzfastq -b barcodes_for-stacks.txt -o $out_folder -e pstI -E phred33 -r -c -q
 
-### If demultiplexing was done
+### If demultiplexing was already done
 <pre>
   cmds=""
   for name in $names;
