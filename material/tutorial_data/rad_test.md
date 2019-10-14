@@ -184,7 +184,7 @@ fi
 cat $cmd_file | parallel -j 20 
 ```
  
-## step 3. cstack, build catelog
+## step 3, cstack, build catelog
 ```shell
 names=`cat accession_names.txt`
 samp=""
@@ -207,8 +207,7 @@ date
 ```
 
 
-## Step 4
-## Run sstacks. Match all samples supplied in the population map against the catalog.
+## Step 4, Run sstacks. Match all samples supplied in the population map against the catalog.
 ```shell
 date
 echo "start sstacks"
@@ -216,11 +215,20 @@ sstacks  -P $OUTPUT_DIR  -M popmap -p 20
 date
 ```
 
-## Step 5 tsvbam and gstacks
+## Step 5, tsvbam and gstacks
 ### Run tsv2bam to transpose the data so it is stored by locus, instead of by sample. We will include paired-end reads using tsv2bam. tsv2bam expects the paired read files to be in the samples directory and they should be named consistently with the single-end reads,e.g. sample_01.1.fq.gz and sample_01.2.fq.gz, which is how process_radtags will output them.
 ### Run gstacks: build a paired-end contig from the metapopulation data (if paired-reads provided), align reads per sample, call variant sites in the population, genotypes in each individual.
+
+Single-end reads:
 ```shell
 tsv2bam -P $OUTPUT_DIR -M popmap --pe-reads-dir $SAMPLE_DIR -t 20
+```
+Pair-end reads:
+```shell
+tsv2bam -P $OUTPUT_DIR -M popmap --pe-reads-dir $SAMPLE_DIR -t 20
+```
+Gstacks:
+```shell
 gstacks -P $OUTPUT_DIR  -M popmap -t 20
 ```
 
