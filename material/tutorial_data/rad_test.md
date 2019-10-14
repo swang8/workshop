@@ -127,9 +127,10 @@ populations -b $batch_id -P $out_folder -M pop_map.txt -r 2 -m 5 -e pstI -t 15 -
 
 </pre>
 
-## Stacks V2
-<pre>
+# Stacks V2
+
 ## Load modules
+```shell
 module load parallel/20151222-intel-2015B
 module load Stacks
 
@@ -147,13 +148,15 @@ perl -ne 's/(\S+)\s+(\S+)/$2\t$1/; print $_' barcodes.txt  >barcodes_for-stacks.
 
 cut -f 2 barcodes_for-stacks.txt >accession_names.txt 
 names=`cat accession_names.txt`
+```
 
 ## step 1.  process_radtags, remove low quality and adapter-containning reads
 ### If demuxing has not been done yet
+```shell
 process_radtags -p fastq -i gzfastq -b barcodes_for-stacks.txt -o $out_folder -e pstI -E phred33 -r -c -q
-
+```
 ### If demultiplexing was already done
-
+```shell
   cmds=""
   for name in $names;
   do
@@ -162,8 +165,10 @@ process_radtags -p fastq -i gzfastq -b barcodes_for-stacks.txt -o $out_folder -e
   done
 
   echo $cmds |tr ";" "\n" |parallel -j 20
+```
 
 ## step 2, ustacks, generate unique stcks
+```shell
 cmd_file="ustacks.cmds"
 if [ ! -s $cmd_file ]; then
   counter=1
@@ -177,10 +182,10 @@ if [ ! -s $cmd_file ]; then
 fi
 
 cat $cmd_file | parallel -j 20 
-
+```
  
 ## step 3. cstack, build catelog
-
+```shell
 names=`cat accession_names.txt`
 samp=""
 for name in $names;
@@ -199,36 +204,36 @@ cstacks  -n 2 -P $OUTPUT_DIR -M ./popmap -p 20
 
 echo "cstacks is done!"
 date
-
+```
 
 
 ## Step 4
 ## Run sstacks. Match all samples supplied in the population map against the catalog.
-
+```shell
 date
 echo "start sstacks"
 sstacks  -P $OUTPUT_DIR  -M popmap -p 20
 date
+```
 
 ## Step 5 tsvbam and gstacks
 ### Run tsv2bam to transpose the data so it is stored by locus, instead of by sample. We will include
 ### paired-end reads using tsv2bam. tsv2bam expects the paired read files to be in the samples
 ### directory and they should be named consistently with the single-end reads,
 ### e.g. sample_01.1.fq.gz and sample_01.2.fq.gz, which is how process_radtags will output them.
-
-tsv2bam -P $OUTPUT_DIR -M popmap --pe-reads-dir $SAMPLE_DIR -t 20
-
 ### Run gstacks: build a paired-end contig from the metapopulation data (if paired-reads provided),
 ### align reads per sample, call variant sites in the population, genotypes in each individual.
-
+```shell
+tsv2bam -P $OUTPUT_DIR -M popmap --pe-reads-dir $SAMPLE_DIR -t 20
 gstacks -P $OUTPUT_DIR  -M popmap -t 20
+```
 
 ## Step 6, population: Calculate population statistics and export several output files
 ### Run populations. Calculate Hardy-Weinberg deviation, population statistics, f-statistics
 ### export several output files.
 
-
+```shell
 populations -P $OUTPUT_DIR -M popmap -r 0.80 --vcf --genepop --structure --fstats --hwe --phylip --fasta --write_single_snp  -t 20
-
 date
-</pre>
+```
+
