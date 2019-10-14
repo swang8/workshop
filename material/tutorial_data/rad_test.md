@@ -135,7 +135,7 @@ module load parallel/20151222-intel-2015B
 module load Stacks
 
 
-INPUT_DIR=./raw_data/combined
+INPUT_DIR=./fastq/
 
 SAMPLE_DIR=samples
 if [ ! -d $SAMPLE_DIR ]; then mkdir $SAMPLE_DIR; fi
@@ -153,7 +153,7 @@ names=`cat accession_names.txt`
 ## step 1.  process_radtags, remove low quality and adapter-containning reads
 ### If demuxing has not been done yet
 ```shell
-process_radtags -p fastq -i gzfastq -b barcodes_for-stacks.txt -o $out_folder -e pstI -E phred33 -r -c -q
+process_radtags -p $INPUT_DIR -i gzfastq -b barcodes_for-stacks.txt -o $SAMPLE_DIR -e pstI -E phred33 -r -c -q
 ```
 ### If demultiplexing was already done
 ```shell
