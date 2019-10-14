@@ -1,4 +1,5 @@
 # Run Stacks for single-end RADseq data:
+|  |  |
 |---|---|
 |[Stacks V1](#v1) |[Stacks V2](#v2)|
 ## Stacks V1 <a name="v1"></a>
