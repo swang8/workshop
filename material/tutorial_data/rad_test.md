@@ -220,7 +220,7 @@ date
 
 Single-end reads:
 ```shell
-tsv2bam -P $OUTPUT_DIR -M popmap --pe-reads-dir $SAMPLE_DIR -t 20
+tsv2bam -P $OUTPUT_DIR -M popmap -t 20
 ```
 Pair-end reads:
 ```shell
