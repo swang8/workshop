@@ -1,6 +1,6 @@
 # Run Stacks for single-end RADseq data:
-
-## Stacks V1
+|[Stacks V1](#v1) |[Stacks V2](#v2)|
+## Stacks V1 <a name="v1"></a>
 <pre>
 ## load stacks
 module load Stacks/1.48-intel-2017A
@@ -127,7 +127,7 @@ populations -b $batch_id -P $out_folder -M pop_map.txt -r 2 -m 5 -e pstI -t 15 -
 
 </pre>
 
-# Stacks V2
+# Stacks V2 <a name="v2"></a>
 
 ## Load modules
 ```shell
