@@ -175,7 +175,7 @@ if [ ! -s $cmd_file ]; then
   for name in $names;
   do
     echo "counter: $counter"
-    cmd="ustacks -t fastq.gz -f $SAMPLE_DIR/${name}_R1.1.fq.gz -r -o $OUTPUT_DIR -i $counter -m 5 -M 2 -p 5 --name $name"
+    cmd="ustacks -t fastq.gz -f $SAMPLE_DIR/${name}_R1.fq.gz -r -o $OUTPUT_DIR -i $counter -m 5 -M 2 -p 5 --name $name"
     echo $cmd >>$cmd_file
     let "counter+=1"
   done
