@@ -202,7 +202,7 @@ echo "cstacks is started"
 
 cstacks  -n 2 -P $OUTPUT_DIR -M ./popmap -p 20
 
-echo "cstacks is done!"
+echo "cstacks is done"
 date
 ```
 
