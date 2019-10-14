@@ -141,19 +141,28 @@ if [ ! -d $SAMPLE_DIR ]; then mkdir $SAMPLE_DIR; fi
 OUTPUT_DIR=stacks2
 if [ ! -d $OUTPUT_DIR ]; then mkdir $OUTPUT_DIR; fi
 
+
+## format the barcode file
+perl -ne 's/(\S+)\s+(\S+)/$2\t$1/; print $_' barcodes.txt  >barcodes_for-stacks.txt 
+
+cut -f 2 barcodes_for-stacks.txt >accession_names.txt 
 names=`cat accession_names.txt`
 
-## step 1.  process_radtags
-### remove low quality and adapter-containning reads
-cmds=""
-for name in $names;
-do
-  cmd="process_radtags -1 $INPUT_DIR/${name}_R1.fastq.gz  -2 $INPUT_DIR/${name}_R2.fastq.gz -o $SAMPLE_DIR -c -q --disable_rad_check -i gzfastq"
-  cmds+="$cmd;"
-done
+## step 1.  process_radtags, remove low quality and adapter-containning reads
+### If demuxing not done yet
+process_radtags -p fastq -i gzfastq -b barcodes_for-stacks.txt -o $out_folder -e pstI -E phred33 -r -c -q
 
-echo $cmds |tr ";" "\n" |parallel -j 20
+### If demultiplexing was done
+<pre>
+  cmds=""
+  for name in $names;
+  do
+    cmd="process_radtags -1 $INPUT_DIR/${name}_R1.fastq.gz  -2 $INPUT_DIR/${name}_R2.fastq.gz -o $SAMPLE_DIR -c -q disable_rad_check -i gzfastq"
+    cmds+="$cmd;"
+  done
 
+  echo $cmds |tr ";" "\n" |parallel -j 20
+</pre>
 ## step 2, ustacks, generate unique stcks
 cmd_file="ustacks.cmds"
 if [ ! -s $cmd_file ]; then
