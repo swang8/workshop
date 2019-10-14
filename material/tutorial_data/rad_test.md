@@ -1,5 +1,6 @@
-#Run Stacks for single-end RADseq data:
+# Run Stacks for single-end RADseq data:
 
+## Stacks V1
 <pre>
 ## load stacks
 module load Stacks/1.48-intel-2017A
@@ -124,8 +125,100 @@ perl -ne 'chomp; print $_, "\t", substr($_, 0, 1), "\n"' sample_names.txt >pop_m
 
 populations -b $batch_id -P $out_folder -M pop_map.txt -r 2 -m 5 -e pstI -t 15 --genomic --fasta --vcf --structure --phylip
 
+</pre>
+
+## Stacks V2
+<pre>
+## Load modules
+module load parallel/20151222-intel-2015B
+module load Stacks
+
+
+INPUT_DIR=./raw_data/combined
+
+SAMPLE_DIR=samples
+if [ ! -d $SAMPLE_DIR ]; then mkdir $SAMPLE_DIR; fi
+OUTPUT_DIR=stacks2
+if [ ! -d $OUTPUT_DIR ]; then mkdir $OUTPUT_DIR; fi
+
+names=`cat accession_names.txt`
+
+## step 1.  process_radtags
+### remove low quality and adapter-containning reads
+cmds=""
+for name in $names;
+do
+  cmd="process_radtags -1 $INPUT_DIR/${name}_R1.fastq.gz  -2 $INPUT_DIR/${name}_R2.fastq.gz -o $SAMPLE_DIR -c -q --disable_rad_check -i gzfastq"
+  cmds+="$cmd;"
+done
+
+echo $cmds |tr ";" "\n" |parallel -j 20
+
+## step 2, ustacks, generate unique stcks
+cmd_file="ustacks.cmds"
+if [ ! -s $cmd_file ]; then
+  counter=1
+  for name in $names;
+  do
+    echo "counter: $counter"
+    cmd="ustacks -t fastq.gz -f $SAMPLE_DIR/${name}_R1.1.fq.gz -r -o $OUTPUT_DIR -i $counter -m 5 -M 2 -p 5 --name $name"
+    echo $cmd >>$cmd_file
+    let "counter+=1"
+  done
+fi
+
+cat $cmd_file | parallel -j 20 
+
+ 
+## step 3. cstack, build catelog
+
+names=`cat accession_names.txt`
+samp=""
+for name in $names;
+do
+  samp+="-s $OUTPUT_DIR/${name} "
+done
+
+date
+echo "cstacks is started"
+
+# Build the catalog of loci available in the metapopulation from the samples contained
+# in the population map. To build the catalog from a subset of individuals, supply
+# a separate population map only containing those samples.
+#
+cstacks  -n 2 -P $OUTPUT_DIR -M ./popmap -p 20
+
+echo "cstacks is done!"
+date
 
 </pre>
 
+# Step 4
+# Run sstacks. Match all samples supplied in the population map against the catalog.
 
+date
+echo "start sstacks"
+sstacks  -P $OUTPUT_DIR  -M popmap -p 20
+date
 
+# Step 5 tsvbam and gstacks
+# Run tsv2bam to transpose the data so it is stored by locus, instead of by sample. We will include
+# paired-end reads using tsv2bam. tsv2bam expects the paired read files to be in the samples
+# directory and they should be named consistently with the single-end reads,
+# e.g. sample_01.1.fq.gz and sample_01.2.fq.gz, which is how process_radtags will output them.
+#
+tsv2bam -P $OUTPUT_DIR -M popmap --pe-reads-dir $SAMPLE_DIR -t 20
+
+# Run gstacks: build a paired-end contig from the metapopulation data (if paired-reads provided),
+# align reads per sample, call variant sites in the population, genotypes in each individual.
+#
+gstacks -P $OUTPUT_DIR  -M popmap -t 20
+
+# Step 6, population: Calculate population statistics and export several output files
+# Run populations. Calculate Hardy-Weinberg deviation, population statistics, f-statistics
+# export several output files.
+#
+
+populations -P $OUTPUT_DIR -M popmap -r 0.80 --vcf --genepop --structure --fstats --hwe --phylip --fasta --write_single_snp  -t 20
+
+date
