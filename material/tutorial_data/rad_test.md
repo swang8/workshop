@@ -239,6 +239,5 @@ gstacks -P $OUTPUT_DIR  -M popmap -t 20
 
 ```shell
 populations -P $OUTPUT_DIR -M popmap -r 0.80 --vcf --genepop --structure --fstats --hwe --phylip --fasta --write_single_snp  -t 20
-date
 ```
 
