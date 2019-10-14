@@ -191,7 +191,7 @@ cstacks  -n 2 -P $OUTPUT_DIR -M ./popmap -p 20
 echo "cstacks is done!"
 date
 
-</pre>
+
 
 # Step 4
 # Run sstacks. Match all samples supplied in the population map against the catalog.
@@ -222,3 +222,4 @@ gstacks -P $OUTPUT_DIR  -M popmap -t 20
 populations -P $OUTPUT_DIR -M popmap -r 0.80 --vcf --genepop --structure --fstats --hwe --phylip --fasta --write_single_snp  -t 20
 
 date
+</pre>
