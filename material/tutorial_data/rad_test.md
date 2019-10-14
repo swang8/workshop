@@ -191,10 +191,10 @@ done
 date
 echo "cstacks is started"
 
-# Build the catalog of loci available in the metapopulation from the samples contained
-# in the population map. To build the catalog from a subset of individuals, supply
-# a separate population map only containing those samples.
-#
+## Build the catalog of loci available in the metapopulation from the samples contained
+## in the population map. To build the catalog from a subset of individuals, supply
+## a separate population map only containing those samples.
+
 cstacks  -n 2 -P $OUTPUT_DIR -M ./popmap -p 20
 
 echo "cstacks is done!"
@@ -202,31 +202,31 @@ date
 
 
 
-# Step 4
-# Run sstacks. Match all samples supplied in the population map against the catalog.
+## Step 4
+## Run sstacks. Match all samples supplied in the population map against the catalog.
 
 date
 echo "start sstacks"
 sstacks  -P $OUTPUT_DIR  -M popmap -p 20
 date
 
-# Step 5 tsvbam and gstacks
-# Run tsv2bam to transpose the data so it is stored by locus, instead of by sample. We will include
-# paired-end reads using tsv2bam. tsv2bam expects the paired read files to be in the samples
-# directory and they should be named consistently with the single-end reads,
-# e.g. sample_01.1.fq.gz and sample_01.2.fq.gz, which is how process_radtags will output them.
-#
+## Step 5 tsvbam and gstacks
+### Run tsv2bam to transpose the data so it is stored by locus, instead of by sample. We will include
+### paired-end reads using tsv2bam. tsv2bam expects the paired read files to be in the samples
+### directory and they should be named consistently with the single-end reads,
+### e.g. sample_01.1.fq.gz and sample_01.2.fq.gz, which is how process_radtags will output them.
+
 tsv2bam -P $OUTPUT_DIR -M popmap --pe-reads-dir $SAMPLE_DIR -t 20
 
-# Run gstacks: build a paired-end contig from the metapopulation data (if paired-reads provided),
-# align reads per sample, call variant sites in the population, genotypes in each individual.
-#
+### Run gstacks: build a paired-end contig from the metapopulation data (if paired-reads provided),
+### align reads per sample, call variant sites in the population, genotypes in each individual.
+
 gstacks -P $OUTPUT_DIR  -M popmap -t 20
 
-# Step 6, population: Calculate population statistics and export several output files
-# Run populations. Calculate Hardy-Weinberg deviation, population statistics, f-statistics
-# export several output files.
-#
+## Step 6, population: Calculate population statistics and export several output files
+### Run populations. Calculate Hardy-Weinberg deviation, population statistics, f-statistics
+### export several output files.
+
 
 populations -P $OUTPUT_DIR -M popmap -r 0.80 --vcf --genepop --structure --fstats --hwe --phylip --fasta --write_single_snp  -t 20
 
